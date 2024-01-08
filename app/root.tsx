@@ -34,7 +34,8 @@ export const loader = async ({
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
   const contacts = await getContacts(q);
-  return json({ contacts, q });
+  const google_maps_api_key = process.env.GOOGLE_MAPS_API_KEY;
+  return json({ contacts, q, google_maps_api_key });
 }
 
 export const action = async () => {
@@ -43,7 +44,7 @@ export const action = async () => {
 }
 
 export default function App() {
-  const { contacts, q } = useLoaderData<typeof loader>();
+  const { contacts, q, google_maps_api_key } = useLoaderData<typeof loader>();
   const navigation = useNavigation();
   const submit = useSubmit();
   const searching = 
@@ -136,7 +137,7 @@ export default function App() {
             navigation.state === "loading" ? "loading" : ""
           }
         >
-          <GoogleMapView />
+          <GoogleMapView api_key={google_maps_api_key!} />
           <Outlet />
         </div>
 
